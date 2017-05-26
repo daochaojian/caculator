@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigator, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import styles from '../styles/caculator';
+import operation from '../utils/operation';
 
 class Caculator extends React.PureComponent {
   static propTypes = {
@@ -17,24 +18,36 @@ class Caculator extends React.PureComponent {
   }
   componentWillMount() {
   }
+  refresh =() => {
+    this.setState({
+      preNumber: '',
+      nextNumber: '',
+      result: '',
+      operator: undefined,
+    });
+  };
   caculate = () => {
     const operator = this.state.operator;
     const preNumber = this.state.preNumber;
     const nextNumber = this.state.nextNumber;
-    console.log(operator);
+    console.log(this.state);
     if (operator !== undefined && preNumber !== '' && nextNumber !== '') {
       switch (operator) {
         case '+':
-          this.setState({ result: parseFloat(preNumber, 10) + parseFloat(nextNumber, 10) });
+          this.setState({
+            result: operation.AccAdd(parseFloat(preNumber, 10), parseFloat(nextNumber, 10)) });
           break;
         case '-':
-          this.setState({ result: parseFloat(preNumber, 10) - parseFloat(nextNumber, 10) });
+          this.setState({
+            result: operation.Subtr(parseFloat(preNumber, 10), parseFloat(nextNumber, 10)) });
           break;
         case '×':
-          this.setState({ result: parseFloat(preNumber, 10) * parseFloat(nextNumber, 10) });
+          this.setState({
+            result: operation.AccMul(parseFloat(preNumber, 10), parseFloat(nextNumber, 10)) });
           break;
         case '÷':
-          this.setState({ result: parseFloat(preNumber, 10) / parseFloat(nextNumber, 10) });
+          this.setState({
+            result: operation.AccDiv(parseFloat(preNumber, 10), parseFloat(nextNumber, 10)) });
           break;
         default:
       }
@@ -76,8 +89,11 @@ class Caculator extends React.PureComponent {
         </View>
         <View style={styles.keyBord}>
           <View style={[styles.row, { height }]}>
-            <TouchableOpacity style={[styles.cell, { height }]}>
-              <Text style={styles.text}>1</Text>
+            <TouchableOpacity
+              style={[styles.cell, { height }]}
+              onPress={() => this.refresh()}
+            >
+              <Text style={styles.text}>c</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.cell, { height }]}>
               <Text style={styles.text}>1</Text>
