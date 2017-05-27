@@ -18,14 +18,26 @@ const operation = {
       : r2;
     return (((arg1 * m) - (arg2 * m)) / m).toFixed(n);
   },
+  AccMul(arg1, arg2) { // 乘法
+    let m = 0;
+    const s1 = arg1.toString();
+    const s2 = arg2.toString();
+    try {
+      m += s1.split('.')[1].length;
+    } catch (e) {}
+    try {
+      m += s2.split('.')[1].length;
+    } catch (e) {}
+    return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m);
+  },
   AccDiv(arg1, arg2) { // 除法
     let t1 = 0;
     let t2 = 0;
     try {
-      t1 = arg1.toString().split('.')[1].length
+      t1 = arg1.toString().split('.')[1].length;
     } catch (e) {}
     try {
-      t2 = arg2.toString().split('.')[1].length
+      t2 = arg2.toString().split('.')[1].length;
     } catch (e) {}
     const r1 = Number(arg1.toString().replace('.', ''));
     const r2 = Number(arg2.toString().replace('.', ''));
@@ -46,18 +58,6 @@ const operation = {
     }
     const m = Math.pow(10, Math.max(r1, r2));
     return ((arg1 * m) + (arg2 * m)) / m;
-  },
-  AccMul(arg1, arg2) { // 乘法
-    let m = 0;
-    const s1 = arg1.toString();
-    const s2 = arg2.toString();
-    try {
-      m += s1.split('.')[1].length;
-    } catch (e) {}
-    try {
-      m += s2.split('.')[1].length;
-    } catch (e) {}
-    return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m);
   },
 };
 

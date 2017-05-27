@@ -1,7 +1,10 @@
 import React from 'react';
-import { Navigator, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { Navigator, View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
 import styles from '../styles/caculator';
 import operation from '../utils/operation';
+import Icon from '../components/common/Icon';
+import colors from '../styles/colors';
+import image from '../images/delete.png';
 
 class Caculator extends React.PureComponent {
   static propTypes = {
@@ -10,7 +13,7 @@ class Caculator extends React.PureComponent {
   constructor() {
     super();
     this.state = {
-      preNumber: '',
+      preNumber: 0,
       nextNumber: '',
       result: '',
       operator: undefined,
@@ -20,7 +23,7 @@ class Caculator extends React.PureComponent {
   }
   refresh =() => {
     this.setState({
-      preNumber: '',
+      preNumber: 0,
       nextNumber: '',
       result: '',
       operator: undefined,
@@ -62,17 +65,26 @@ class Caculator extends React.PureComponent {
   input = (number) => {
     let preNumber = this.state.preNumber;
     let nextNumber = this.state.nextNumber;
-    if (this.state.operator !== undefined && this.state.preNumber !== '') {
+    if (this.state.operator !== undefined) {
       // 是否输入
       this.setState({ nextNumber: nextNumber += number.toString() });
     } else {
-      this.setState({ preNumber: preNumber += number.toString() });
+      if (number !== '.') {
+        preNumber === 0
+        ? this.setState({ preNumber: number.toString() })
+        : this.setState({ preNumber: preNumber += number.toString() });
+      } else {
+        `${preNumber}`.indexOf('.') !== -1
+        ? null
+        : this.setState({ preNumber: preNumber += number.toString() });
+      }
     }
   };
   render() {
     const height = Dimensions.get('window').height / 10;
-    const preNumber = this.state.preNumber ? `${this.state.preNumber}` : null;
-    const nextNumber = this.state.nextNumber ? `${this.state.nextNumber}` : null;
+    const bottomHeight = height * 2;
+    const preNumber =  this.state.preNumber;
+    const nextNumber = this.state.nextNumber;
     console.log(this.state);
     return (
       <View style={styles.container}>
@@ -83,8 +95,8 @@ class Caculator extends React.PureComponent {
           </Text>
           <Text style={styles.screenText}>{nextNumber}
           </Text>
-          <Text style={styles.screenText}>{this.state.result
-            ? this.state.result : null}
+          <Text style={styles.result}>{`${this.state.result}`.length
+            ? `=${this.state.result}` : null}
           </Text>
         </View>
         <View style={styles.keyBord}>
@@ -96,7 +108,11 @@ class Caculator extends React.PureComponent {
               <Text style={styles.text}>c</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.cell, { height }]}>
-              <Text style={styles.text}>1</Text>
+              <Image
+                style={styles.delete}
+                source={image}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.cell, { height }]}
@@ -163,53 +179,54 @@ class Caculator extends React.PureComponent {
               <Text style={styles.text}>÷</Text>
             </TouchableOpacity>
           </View>
-          <View style={[styles.row, { height }]}>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-              onPress={() => this.input(7)}
-            >
-              <Text style={styles.text}>7</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-              onPress={() => this.input(8)}
-            >
-              <Text style={styles.text}>8</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-              onPress={() => this.input(9)}
-            >
-              <Text style={styles.text}>9</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-            >
-              <Text style={styles.text}>1</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.row, { height }]}>
-            <TouchableOpacity style={[styles.cell, { height }]}>
-              <Text style={styles.text}>%</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-              onPress={() => this.input(0)}
-            >
-              <Text style={styles.text}>0</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-              onPress={() => this.input('.')}
-            >
-              <Text style={styles.text}>.</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.cell, { height }]}
-              onPress={this.caculate}
-            >
-              <Text style={styles.text}>=</Text>
-            </TouchableOpacity>
+          <View style={[styles.bottom, { height: bottomHeight }]}>
+            <View style={[styles.left, { height: bottomHeight }]}>
+              <View style={[styles.bottomRow, { height }]}>
+                <TouchableOpacity
+                  style={[styles.cell, { height }]}
+                  onPress={() => this.input(7)}
+                >
+                  <Text style={styles.text}>7</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.cell, { height }]}
+                  onPress={() => this.input(8)}
+                >
+                  <Text style={styles.text}>8</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.cell, { height }]}
+                  onPress={() => this.input(9)}
+                >
+                  <Text style={styles.text}>9</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.bottomRow, { height }]}>
+                <TouchableOpacity style={[styles.cell, { height }]}>
+                  <Text style={styles.text}>%</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.cell, { height }]}
+                  onPress={() => this.input(0)}
+                >
+                  <Text style={styles.text}>0</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.cell, { height }]}
+                  onPress={() => this.input('.')}
+                >
+                  <Text style={styles.text}>.</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={[styles.right, { height: bottomHeight }]}>
+              <TouchableOpacity
+                style={[styles.cell, { height: bottomHeight }]}
+                onPress={this.caculate}
+              >
+                <Text style={styles.text}>=</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
