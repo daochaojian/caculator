@@ -50,7 +50,7 @@ class Caculator extends React.PureComponent {
           break;
         case '÷':
           this.setState({
-            result: operation.AccDiv(parseFloat(preNumber, 10), parseFloat(nextNumber, 10)) });
+            result: parseFloat(preNumber, 10) / parseFloat(nextNumber, 10) });
           break;
         default:
       }
@@ -65,7 +65,7 @@ class Caculator extends React.PureComponent {
   input = (number) => {
     let preNumber = this.state.preNumber;
     let nextNumber = this.state.nextNumber;
-    if (this.state.operator !== undefined) {
+    if (this.state.operator !== undefined && preNumber !== '') {
       // 是否输入
       this.setState({ nextNumber: nextNumber += number.toString() });
     } else {
@@ -78,6 +78,19 @@ class Caculator extends React.PureComponent {
         ? null
         : this.setState({ preNumber: preNumber += number.toString() });
       }
+    }
+  };
+  delete = () => {
+    let preNumber = this.state.preNumber;
+    let nextNumber = this.state.nextNumber;
+    if (nextNumber === '') {
+      if (this.state.operator !== undefined) {
+        this.setState({ operator: undefined});
+      } else {
+        this.setState({ preNumber: preNumber.slice(0, -1) });
+      }
+    } else {
+      this.setState({ nextNumber: nextNumber.slice(0, -1) });
     }
   };
   render() {
@@ -107,12 +120,16 @@ class Caculator extends React.PureComponent {
             >
               <Text style={styles.text}>c</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.cell, { height }]}>
-              <Image
+            <TouchableOpacity
+              style={[styles.cell, { height }]}
+              onPress={() => this.delete()}
+              >
+              {/* <Image
                 style={styles.delete}
                 source={image}
                 resizeMode="contain"
-              />
+              /> */}
+              <Icon name="angleLeft" width="16" height="12" fill={colors.themeBlack} />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.cell, { height }]}
