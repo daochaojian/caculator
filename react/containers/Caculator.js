@@ -187,7 +187,7 @@ class Caculator extends React.PureComponent {
             >
               <Text style={styles.text}>1</Text>
             </TouchableOpacity>
-          </View>ske
+          </View>
           <View style={[styles.row, { height }]}>
             <TouchableOpacity style={[styles.cell, { height }]}>
               <Text style={styles.text}>%</Text>
